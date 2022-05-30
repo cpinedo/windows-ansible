@@ -1,0 +1,18 @@
+FROM ubuntu:16.04
+RUN apt-get update && apt-get install -y openssh-server software-properties-common && add-apt-repository --yes --update ppa:ansible/ansible
+RUN mkdir /var/run/sshd
+RUN echo 'root:root' | chpasswd
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+RUN apt-get update && apt-get install -y ansible vim
+# RUN export ANSIBLE_HOST_KEY_CHECKING=False
+# RUN echo 'host_key_checking = False' >> /etc/ansible/ansible.cfg
+RUN mkdir $HOME/.ssh && touch $HOME/.ssh/known_hosts
+RUN echo '10.10.250.161 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAfZ5O/DrBmdcGASOR5wAX/2j1N1xDkrgZkCJxarPln4iqkFUMJx8NccMGCw+T8ha0S99lywwXsivNl/49ctfYQ=' > $HOME/.ssh/known_hosts
+RUN echo '10.10.250.162 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBSVQMF49BfavK0+uczsSh6tbbgalPMBBth42MWjPVtOfiq/WGCQjT3kXpn4pWrQePA7bSb5T/CaihMhXcRQMI8=' >> $HOME/.ssh/known_hosts
+EXPOSE 22
+ENV ANSIBLE_HOST_KEY_CHECKING=False
+CMD ["/usr/sbin/sshd", "-D"]

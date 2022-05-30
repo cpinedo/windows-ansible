@@ -1,0 +1,1 @@
+docker build -t ansible:0.0.1 .
