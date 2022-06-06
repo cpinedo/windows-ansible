@@ -16,3 +16,4 @@ RUN echo '10.10.250.162 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAI
 EXPOSE 22
 ENV ANSIBLE_HOST_KEY_CHECKING=False
 CMD ["/usr/sbin/sshd", "-D"]
+RUN ansible-galaxy collection install community.crypto
