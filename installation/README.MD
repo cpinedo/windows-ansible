@@ -2,6 +2,10 @@
 
 Run `./buildAnsible.ps1` This script will create the docker image that will run ansible.
 
+# Possible fix
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+
 # Locate the directory where windows read the profiles
 
 Find the profile.ps1 location with the command `Get-Variable profile | Format-List`
